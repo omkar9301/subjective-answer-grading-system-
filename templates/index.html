@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjective Answer Grading System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #4c5caf;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #FFC107;
+            transform: scale(1.1);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://source.unsplash.com/1600x900/?education,technology');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 600;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 2rem;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .center-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin: 2rem auto;
+            width: 50%;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .center-form h2 {
+            margin-bottom: 1rem;
+        }
+
+        .center-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .center-form input, .center-form button {
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .center-form button {
+            background-color: #4c5caf;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .center-form button:hover {
+            background-color: #3b4a8b;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .center-form {
+                width: 80%;
+            }
+
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .section {
+    padding: 3rem 2rem;
+    text-align: center;
+    background-color: white;
+    margin: 2rem auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 80%;
+}
+
+.section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: #4c5caf;
+}
+
+.feature-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.feature-box {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+}
+
+.feature-box i {
+    font-size: 3rem;
+    color: #4c5caf;
+    margin-bottom: 1rem;
+}
+
+.feature-box h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.feature-box p {
+    font-size: 1rem;
+    color: #666;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Grading System</a>
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>Welcome to the Subjective Answer Grading System</h1>
+    </div>
+
+    <div class="button-container">
+        <a href="{{ url_for('teacher_login') }}" class="button">Teacher Login</a>
+        <a href="{{ url_for('teacher_register') }}" class="button">Teacher Register</a>
+        <a href="{{ url_for('student_login') }}" class="button">Student Login</a>
+    </div>
+
+    <div class="section">
+        <h2>Why Choose Our System?</h2>
+        <div class="feature-container">
+            <div class="feature-box">
+                <i class="fas fa-key"></i>
+                <h3>Keyword-Based Grading</h3>
+                <p>Grades are assigned based on extracted keywords from answers.</p>
+            </div>
+            <div class="feature-box">
+                <i class="fas fa-users"></i>
+                <h3>Teacher & Student Portal</h3>
+                <p>Easy access for teachers to evaluate and students to view results.</p>
+            </div>
+            <div class="feature-box">
+                <i class="fas fa-desktop"></i>
+                <h3>User-Friendly Interface</h3>
+                <p>Simple and easy-to-use portal for seamless experience.</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!---
+    <div class="center-form">
+        <h2>Upload an Image</h2>
+        <form action="/extract_text" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" required>
+            <button type="submit">Extract Text</button>
+        </form>
+    </div>
+    -->
+
+    <div class="footer">
+        <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+</body>
+</html>

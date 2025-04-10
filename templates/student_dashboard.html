@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        /* Reset & Base */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #e0f7fa, #e3f2fd);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #2c3e50;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #0d47a1;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo a {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            margin-left: 1.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ffca28;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 3rem 1rem;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            color: #01060c;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            text-align: center;
+            color: #01060c;
+            margin-bottom: 2rem;
+        }
+
+        .exam-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 992px) {
+            .exam-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .exam-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card strong {
+            font-size: 1.3rem;
+            color: #010812;
+        }
+
+        
+        .card-buttons {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card-buttons a button {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            background-color: #1976d2;
+            border: 2px solid #010f18;
+            border-radius: 6px;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-buttons a button:hover {
+            background-color: #17cd14;
+            border-color: #010e16;
+            transform: scale(1.05);
+        }
+
+        .card-buttons a button:focus {
+            outline: none;
+            background-color: #1C6EA4;
+            border-color: #000b02;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.3);
+        }
+
+        .no-papers {
+            text-align: center;
+            color: #757575;
+            font-style: italic;
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #263238;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .footer a {
+            color: #64b5f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #ffca28;
+        }
+
+        @media (max-width: 600px) {
+            .card-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Grading System</a>
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Welcome to Your Dashboard</h1>
+        <h2>Available Question Papers</h2>
+
+        {% if active_question_papers %}
+            <div class="exam-list">
+                {% for paper in active_question_papers %}
+                    <div class="card">
+                        <strong>{{ paper.title }}</strong>
+                        <div class="card-buttons">
+                            <a href="{{ url_for('start_exam', paper_id=paper.id) }}">
+                                <button>Start Exam</button>
+                            </a>
+                            <a href="{{ url_for('view_exam_answers', paper_id=paper.id) }}">
+                                <button>View Exam Results</button>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-papers">No active question papers available at the moment.</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+</body>
+</html>

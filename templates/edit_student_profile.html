@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Student Profile</title>
+  <style>
+    /* Base Layout */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e3f2fd;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #007BFF;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.2rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #ffc107;
+    }
+
+    /* Form Container */
+    .content {
+      max-width: 600px;
+      margin: 3rem auto;
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #007BFF;
+    }
+
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #007BFF;
+      box-shadow: 0 0 3px #007BFF;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+    }
+
+    .footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #ffc107;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .content {
+        margin: 1.5rem;
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">
+      <a href="#">Grading System</a>
+    </div>
+    <div class="nav-links">
+      <a href="{{ url_for('view_students') }}">Back to Students List</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h1>Edit Profile: {{ student.username }}</h1>
+    <form method="POST">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" value="{{ student.username }}" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{ student.email }}" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Leave blank to keep current password">
+
+      <button type="submit">Update Profile</button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+  </div>
+</body>
+</html>

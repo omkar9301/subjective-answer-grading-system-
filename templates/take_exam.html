@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Take Exam - {{ paper.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E3F2FD;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 25%;
+            background-color: #D1E9FF;
+            padding: 2rem;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            color: #1565C0;
+            font-weight: bold;
+        }
+
+        .question-link {
+            display: block;
+            margin: 1rem 0;
+            color: #0D47A1;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .question-link:hover,
+        .question-link.active {
+            background-color: #90CAF9;
+            color: #fff;
+        }
+
+        .main-content {
+            width: 75%;
+            padding: 2rem;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .question-block {
+            display: none;
+        }
+
+        .question-block.active {
+            display: block;
+        }
+
+        .question-block p {
+            font-size: 1.2rem;
+            color: #0D47A1;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #90CAF9;
+            border-radius: 6px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 150px;
+            margin-top: 1rem;
+        }
+
+        button {
+            background-color: #1976D2;
+            color: white;
+            border: 1px solid #1565C0;
+            border-radius: 6px;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            margin-top: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, box-shadow 0.2s;
+        }
+
+        button:hover, button:focus {
+            background-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+            outline: none;
+        }
+
+        #submitBtn {
+            display: none;
+        }
+
+        .webcam-box {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .webcam-box p {
+            margin: 0.5rem 0 0;
+            font-weight: bold;
+            color: #1565C0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>{{ paper.title }}</h2>
+        {% for question in questions %}
+            <div class="question-link" onclick="showQuestion({{ question.id }})" id="link_{{ question.id }}">Q{{ loop.index }}: {{ question.text|truncate(20) }}</div>
+        {% endfor %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <form method="POST" id="examForm">
+            {% for question in questions %}
+                <div class="question-block" id="question_{{ question.id }}">
+                    <p><strong>Q{{ loop.index }}:</strong> {{ question.text }}</p>
+                    <textarea name="answer_{{ question.id }}" oninput="saveAnswer({{ question.id }})" placeholder="Write your answer here..." required></textarea>
+                </div>
+            {% endfor %}
+            <button type="submit" id="submitBtn">Submit Exam</button>
+        </form>
+
+        <!-- Webcam -->
+        <div class="webcam-box">
+            <video id="webcam" width="200" height="150" autoplay muted></video>
+            <p>Webcam Monitoring</p>
+        </div>
+    </div>
+
+    <script>
+        let answers = {};
+        const totalQuestions = {{ questions|length }};
+
+        function showQuestion(id) {
+            document.querySelectorAll('.question-block').forEach(q => q.classList.remove('active'));
+            document.querySelectorAll('.question-link').forEach(l => l.classList.remove('active'));
+
+            document.getElementById(`question_${id}`).classList.add('active');
+            document.getElementById(`link_${id}`).classList.add('active');
+        }
+
+        function saveAnswer(id) {
+            const textarea = document.querySelector(`#question_${id} textarea`);
+            answers[id] = textarea.value.trim();
+            checkAllAnswered();
+        }
+
+        function checkAllAnswered() {
+            if (Object.keys(answers).length === totalQuestions &&
+                Object.values(answers).every(ans => ans.length > 0)) {
+                document.getElementById("submitBtn").style.display = "inline-block";
+            }
+        }
+
+        // Show first question by default
+        window.onload = () => {
+            const firstQuestion = document.querySelector(".question-block");
+            const firstLink = document.querySelector(".question-link");
+            if (firstQuestion && firstLink) {
+                firstQuestion.classList.add("active");
+                firstLink.classList.add("active");
+            }
+            startWebcam();
+        };
+
+        // Webcam start
+        function startWebcam() {
+            const video = document.getElementById('webcam');
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(() => {
+                    alert("Webcam access is required. Submitting exam.");
+                    document.getElementById("examForm").submit();
+                });
+        }
+        
+        let examStarted = false;
+    
+        // Request fullscreen on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const elem = document.documentElement;
+            requestFullscreen(elem);
+            examStarted = true;
+            startWebcam();
+        });
+    
+        function requestFullscreen(element) {
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            }
+        }
+    
+        // Handle entering/exiting fullscreen
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari
+        document.addEventListener('msfullscreenchange', handleFullscreenChange); // IE11
+    
+        function handleFullscreenChange() {
+            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    
+            if (isFullscreen) {
+                // Hide navbar and footer
+            } else if (examStarted) {
+                // Show them back (in case exam isn't submitted yet)
+                
+                // Student exited fullscreen — auto submit
+                alert("Fullscreen exited! Your exam is being submitted.");
+                document.querySelector('form').submit();
+            }
+        }
+    
+        // Detect click outside the screen (e.g., switching tabs or click on browser UI)
+        window.addEventListener('blur', () => {
+            if (examStarted) {
+                alert("You clicked outside the screen. The exam will be submitted.");
+                document.querySelector('form').submit();
+            }
+        });
+    
+        // Webcam access
+        function startWebcam() {
+            const video = document.getElementById('webcam');
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(err => {
+                    alert("Webcam access is required. Submitting exam.");
+                    document.querySelector('form').submit();
+                });
+        }
+    </script>
+
+</body>
+</html>

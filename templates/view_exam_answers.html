@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Exam Answers</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f3;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 2rem 0;
+            color: #007BFF;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #FFC107;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #FFC107;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #ffdb4d;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Grading System</a>
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Exam Answers for {{ student.username }} - {{ exam_paper.title }}</h1>
+
+        {% if questions %}
+            <ul>
+            {% for question in questions %}
+                <li>
+                    <strong>Question:</strong> {{ question.text }} <br>
+                    <strong>Answer:</strong> 
+                    {% if question.id in answers_dict %}
+                        {{ answers_dict[question.id] }}
+                    {% else %}
+                        No answer submitted.
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No questions available for this paper.</p>
+        {% endif %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Student Answer</th>
+                    <th>Ideal Answer</th>
+                    <th>Grade (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question, student_answer, ideal_answer, grade in graded_answers %}
+                <tr>
+                    <td>{{ question.text }}</td>
+                    <td>{{ student_answer }}</td>
+                    <td>{{ ideal_answer }}</td>
+                    <td>{{ grade }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('view_students') }}">Back to Students List</a>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+</body>
+</html>

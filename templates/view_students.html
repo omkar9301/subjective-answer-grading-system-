@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Students</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E3F2FD;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #007BFF;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: #FFFFFF;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .content:hover {
+            transform: translateY(-5px);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: #F8F9FA;
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        li span {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .no-students {
+            text-align: center;
+            color: #666;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #FFC107;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #343A40;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #FFC107;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content {
+                width: 90%;
+                padding: 2rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Grading System</a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('teacher_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>Student List</h1>
+
+        {% if students %}
+        <ul>
+            {% for student in students %}
+            <li>
+                <span>{{ student.username }} ({{ student.email }})</span>
+                <div class="button-container">
+                    <a href="{{ url_for('view_student_profile', student_id=student.id) }}">
+                        <button>View Profile</button>
+                    </a>
+                    <a href="{{ url_for('edit_student_profile', student_id=student.id) }}">
+                        <button>Edit Profile</button>
+                    </a>
+                    <a href="{{ url_for('view_student_exams', student_id=student.id) }}">
+                        <button>View Exams</button>
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="no-students">No students available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+</body>
+</html>

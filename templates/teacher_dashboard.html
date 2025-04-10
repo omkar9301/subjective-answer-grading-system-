@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F9F9F9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #4CAF50;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #FFC107;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .status.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status.inactive {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        /* Buttons */
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .activate { background-color: #4CAF50; color: white; }
+        .deactivate { background-color: #d9534f; color: white; }
+        .view { background-color: #007BFF; color: white; }
+        .delete { background-color: #d9534f; color: white; }
+        .download { background-color: #f0ad4e; color: white; }
+        .create { background-color: #5cb85c; color: white; padding: 0.8rem 2rem; font-size: 1.2rem; display: block; margin: 20px auto; }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Grading System</a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('view_students') }}">View Students</a>
+            <a href="{{ url_for('student_register') }}">Student Registration</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Teacher Dashboard</h1>
+        <h2>Welcome, {{ session['username'] }}</h2>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>{{ question_papers|length }}</h3>
+                <p>Total Question Papers</p>
+            </div>
+            <div class="card">
+                <h3>{{ total_students }}</h3>
+                <p>Registered Students</p>
+            </div>
+            <div class="card">
+                <h3>{{ active_papers }}</h3>
+                <p>Active Papers</p>
+            </div>
+        </div>
+
+        <h3>Your Question Papers</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paper in question_papers %}
+                <tr>
+                    <td>{{ paper.title }}</td>
+                    <td>
+                        <span class="status {{ 'active' if paper.is_active else 'inactive' }}">
+                            {{ 'Active' if paper.is_active else 'Inactive' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <form method="POST">
+                                <input type="hidden" name="paper_id" value="{{ paper.id }}">
+                                {% if paper.is_active %}
+                                <button type="submit" name="action" value="deactivate" class="deactivate">Deactivate</button>
+                                {% else %}
+                                <button type="submit" name="action" value="activate" class="activate">Activate</button>
+                                {% endif %}
+                            </form>
+                            <a href="{{ url_for('view_question_paper_details', paper_id=paper.id) }}">
+                                <button class="view">View Details</button>
+                            </a>
+                            <form action="{{ url_for('delete_question_paper', paper_id=paper.id) }}" method="POST">
+                                <button type="submit" onclick="return confirm('Are you sure?')" class="delete">Delete</button>
+                            </form>
+                            <a href="{{ url_for('download_question_paper_pdf', paper_id=paper.id) }}">
+                                <button class="download">Download PDF</button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No question papers found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('create_question_paper') }}">
+            <button class="create">Create New Question Paper</button>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+</body>
+</html>

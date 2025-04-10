@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Question Paper</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .navbar {
+      background-color: #4CAF50;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      color: white;
+      font-weight: bold;
+      margin-left: 1rem;
+      text-decoration: none;
+    }
+
+    .navbar a:hover {
+      color: #FFC107;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 2rem 0;
+      color: #6f42c1;
+    }
+
+    form {
+      background: #fff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .question-block {
+      padding: 1rem;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    button[type="button"] {
+      background-color: #6c63ff;
+      color: white;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+    }
+
+    .footer a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #FFC107;
+    }
+  </style>
+
+  <script>
+    let questionCount = 0;
+
+    function addAnswerField(questionIndex) {
+      const answerContainer = document.getElementById(`answers-container-${questionIndex}`);
+      const newAnswerField = document.createElement('input');
+      newAnswerField.type = 'text';
+      newAnswerField.name = `answers_${questionIndex}[]`;
+      newAnswerField.placeholder = 'Enter another answer';
+      answerContainer.appendChild(newAnswerField);
+    }
+
+    function addQuestionField() {
+      const questionContainer = document.getElementById('questions-container');
+      const questionDiv = document.createElement('div');
+      questionDiv.classList.add('question-block');
+      questionDiv.id = `question-${questionCount}`;
+      questionDiv.innerHTML = `
+        <label for="question_${questionCount}">Question ${questionCount + 1}:</label>
+        <input type="text" id="question_${questionCount}" name="questions[]" placeholder="Enter question" required>
+        <div id="answers-container-${questionCount}">
+          <label>Answers:</label>
+          <input type="text" name="answers_${questionCount}[]" placeholder="Enter answer" required>
+        </div>
+        <button type="button" onclick="addAnswerField(${questionCount})">+ Add Answer</button>
+      `;
+      questionContainer.appendChild(questionDiv);
+      questionCount++;
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo"><a href="#">Grading System</a></div>
+    <div class="nav-links">
+      <a href="{{ url_for('teacher_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <h1>Create Question Paper</h1>
+  <form method="POST">
+    <label for="title">Question Paper Title:</label>
+    <input type="text" id="title" name="title" placeholder="Enter title" required>
+
+    <div id="questions-container"></div>
+
+    <button type="button" onclick="addQuestionField()">+ Add Question</button>
+    <button type="submit">Create Question Paper</button>
+  </form>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+  </div>
+</body>
+</html>

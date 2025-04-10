@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+            margin-top: 20px;
+        }
+        h2 {
+            color: #28a745;
+            margin-top: 30px;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #d4edda;
+        }
+        a {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Database Overview</h1>
+    
+    <!-- Teachers Table -->
+    <h2>Teachers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for teacher in teachers %}
+            <tr>
+                <td>{{ teacher.id }}</td>
+                <td>{{ teacher.username }}</td>
+                <td>{{ teacher.email }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No teachers found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Students Table -->
+    <h2>Students</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.username }}</td>
+                <td>{{ student.email }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No students found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Question Papers Table -->
+    <h2>Question Papers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Teacher ID</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paper in question_papers %}
+            <tr>
+                <td>{{ paper.id }}</td>
+                <td>{{ paper.title }}</td>
+                <td>{{ paper.teacher_id }}</td>
+                <td>{{ 'Active' if paper.is_active else 'Inactive' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4">No question papers found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Questions Table -->
+    <h2>Questions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Text</th>
+                <th>Paper ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+            <tr>
+                <td>{{ question.id }}</td>
+                <td>{{ question.text }}</td>
+                <td>{{ question.paper_id }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No questions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Answers Table -->
+    <h2>Answers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Text</th>
+                <th>Question ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in answers %}
+            <tr>
+                <td>{{ answer.id }}</td>
+                <td>{{ answer.text }}</td>
+                <td>{{ answer.question_id }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No answers found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Exam Answers Table -->
+    <h2>Exam Answers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student ID</th>
+                <th>Question ID</th>
+                <th>Answer</th>
+                <th>Exam Paper ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for examanswer in examanswers %}
+            <tr>
+                <td>{{ examanswer.id }}</td>
+                <td>{{ examanswer.student_id }}</td>
+                <td>{{ examanswer.question_id }}</td>
+                <td>{{ examanswer.answer }}</td>
+                <td>{{ examanswer.exam_paper_id }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">No exam answers found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

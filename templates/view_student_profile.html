@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F4F6F8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #4CAF50;
+        }
+
+        .content {
+            max-width: 500px;
+            margin: 3rem auto;
+            background: #FFFFFF;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .content:hover {
+            transform: translateY(-5px);
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            color: #555;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.7rem 1.2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #388E3C;
+            transform: scale(1.05);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #FFC107;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #333;
+            color: rgb(248, 243, 243);
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #FFC107;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .content {
+                width: 90%;
+                padding: 2rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="#">Grading System</a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('view_students') }}">Back to Students List</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1>{{ student.username }}'s Profile</h1>
+        <p><strong>Email:</strong> {{ student.email }}</p>
+        <p><strong>Role:</strong> Student</p>
+        <div class="button-container">
+            <a href="{{ url_for('edit_student_profile', student_id=student.id) }}">
+                <button>Edit Profile</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
+    </div>
+</body>
+</html>
