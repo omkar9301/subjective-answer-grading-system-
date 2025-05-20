@@ -49,6 +49,7 @@ def grade_answer(question, student_answer, ideal_answer):
         return 0
 
 
+
 # Route to display the main index page with buttons
 @app.route('/')
 def index():
