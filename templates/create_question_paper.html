@@ -142,12 +142,17 @@
       questionDiv.innerHTML = `
         <label for="question_${questionCount}">Question ${questionCount + 1}:</label>
         <input type="text" id="question_${questionCount}" name="questions[]" placeholder="Enter question" required>
+        
+        <label>Marks:</label>
+        <input type="number" name="marks[]" placeholder="Enter max marks" required min="1" step="0.5">
+
         <div id="answers-container-${questionCount}">
-          <label>Answers:</label>
-          <input type="text" name="answers_${questionCount}[]" placeholder="Enter answer" required>
+            <label>Answers:</label>
+            <input type="text" name="answers_${questionCount}[]" placeholder="Enter answer" required>
         </div>
         <button type="button" onclick="addAnswerField(${questionCount})">+ Add Answer</button>
-      `;
+    `;
+
       questionContainer.appendChild(questionDiv);
       questionCount++;
     }

@@ -179,7 +179,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for question, student_answer, ideal_answer, grade in graded_answers %}
+                {% for question, student_answer, ideal_answer, grade, score in graded_answers %}
                 <tr>
                     <td>{{ question.text }}</td>
                     <td>{{ student_answer }}</td>

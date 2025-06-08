@@ -230,9 +230,6 @@
                                 <button type="submit" name="action" value="activate" class="activate">Activate</button>
                                 {% endif %}
                             </form>
-                            <a href="{{ url_for('view_question_paper_details', paper_id=paper.id) }}">
-                                <button class="view">View Details</button>
-                            </a>
                             <form action="{{ url_for('delete_question_paper', paper_id=paper.id) }}" method="POST">
                                 <button type="submit" onclick="return confirm('Are you sure?')" class="delete">Delete</button>
                             </form>

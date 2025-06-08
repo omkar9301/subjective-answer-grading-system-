@@ -36,13 +36,23 @@ class QuestionPaper(db.Model):
     questions = db.relationship('Question', backref='question_paper', cascade="all, delete-orphan")
 
 
+# class Question(db.Model):
+#     __tablename__ = 'questions'
+    
+#     id = db.Column(db.Integer, primary_key=True)  # Define as primary key
+#     text = db.Column(db.Text, nullable=False)
+#     paper_id = db.Column(db.Integer, db.ForeignKey('question_papers.id'), nullable=False)  # Correct ForeignKey reference
+#     answers = db.relationship('Answer', backref='question', cascade="all, delete-orphan")
+
 class Question(db.Model):
     __tablename__ = 'questions'
-    
-    id = db.Column(db.Integer, primary_key=True)  # Define as primary key
+
+    id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    paper_id = db.Column(db.Integer, db.ForeignKey('question_papers.id'), nullable=False)  # Correct ForeignKey reference
+    max_marks = db.Column(db.Float, default=1.0)  # NEW: Assignable marks
+    paper_id = db.Column(db.Integer, db.ForeignKey('question_papers.id'), nullable=False)
     answers = db.relationship('Answer', backref='question', cascade="all, delete-orphan")
+
 
 class Answer(db.Model):
     __tablename__ = 'answers'

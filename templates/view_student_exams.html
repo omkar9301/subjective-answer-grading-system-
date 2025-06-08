@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submitted Exams</title>
+    <title>View Exam Answers</title>
     <style>
-        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #F4F6F8;
+            background-color: #eef2f3;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -19,99 +18,93 @@
 
         h1 {
             text-align: center;
-            margin: 1.5rem 0;
-            color: #4CAF50;
+            margin: 2rem 0;
+            color: #007BFF;
         }
 
         .content {
-            max-width: 800px;
-            margin: 2rem auto;
-            background: #FFFFFF;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        li {
-            background: #FAFAFA;
-            margin-bottom: 1rem;
+        table th, table td {
             padding: 1rem;
-            border: 1px solid #DDD;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            text-align: left;
+            border: 1px solid #ddd;
         }
 
-        li strong {
-            color: #4CAF50;
-            font-size: 1.1rem;
-        }
-
-        .button-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        button {
-            background-color: #4CAF50;
+        table th {
+            background-color: #007BFF;
             color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0.6rem 1rem;
+            text-transform: uppercase;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
             font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
         }
 
-        button:hover {
-            background-color: #388E3C;
-            transform: scale(1.05);
+        a:hover {
+            color: #0056b3;
         }
 
-        .no-exams {
-            text-align: center;
-            color: #888;
-            margin: 2rem 0;
-            font-size: 1.1rem;
-        }
-
-        /* Navbar Styles */
         .navbar {
-            background-color: #4CAF50;
+            background-color: #007BFF;
             color: white;
-            padding: 1rem 2rem;
+            padding: 15px 30px;
             position: sticky;
             top: 0;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar a {
+        .navbar .logo a {
             color: white;
             text-decoration: none;
-            margin-left: 1rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            transition: color 0.3s ease;
         }
 
-        .navbar a:hover {
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-links a:hover {
             color: #FFC107;
         }
 
-        /* Footer Styles */
         .footer {
             background-color: #333;
             color: white;
@@ -121,29 +114,12 @@
         }
 
         .footer a {
-            color: #4CAF50;
+            color: #FFC107;
             text-decoration: none;
         }
 
         .footer a:hover {
-            color: #FFC107;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .content {
-                width: 95%;
-                padding: 1.5rem;
-            }
-
-            li {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .button-container {
-                justify-content: center;
-            }
+            color: #ffdb4d;
         }
     </style>
 </head>
@@ -162,29 +138,33 @@
 
     <!-- Content -->
     <div class="content">
-        <h1>Exams Submitted by {{ student.username }}</h1>
-        
-        {% if submitted_exams %}
-            <ul>
-            {% for exam in submitted_exams %}
-                <li>
-                    <div>
-                        <strong>{{ exam.exam_paper.title }}</strong>
-                        <div class="button-container">
-                            <a href="{{ url_for('view_exam_answers_teachers', paper_id=exam.exam_paper.id, student_id=student.id) }}">
-                                <button>View Answers</button>
-                            </a>
-                            <a href="{{ url_for('download_student_answer_pdf', paper_id=exam.exam_paper.id, student_id=student.id) }}">
-                                <button>Download PDF</button>
-                            </a>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p class="no-exams">No exams submitted yet.</p>
-        {% endif %}
+        <h1>Exam Answers for {{ student.username }} - {{ exam_paper.title }}</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Student Answer</th>
+                    <th>Ideal Answer</th>
+                    <th>Grade (%)</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question, student_answer, ideal_answer, grade, score in graded_answers %}
+
+                <tr>
+                    <td>{{ question.text }}</td>
+                    <td>{{ student_answer if student_answer else "No answer submitted." }}</td>
+                    <td>{{ ideal_answer }}</td>
+                    <td>{{ grade }}%</td>
+                    <td>{{ score }} / {{ question.max_marks }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('view_student_exams', student_id=student.id) }}">← Back to Exams</a>
     </div>
 
     <!-- Footer -->
