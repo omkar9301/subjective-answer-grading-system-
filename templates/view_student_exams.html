@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Exam Answers</title>
+    <title>Submitted Exams</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #eef2f3;
+            background-color: #F4F6F8;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -18,90 +18,74 @@
 
         h1 {
             text-align: center;
-            margin: 2rem 0;
-            color: #007BFF;
+            margin: 1.5rem 0;
+            color: #4CAF50;
         }
 
         .content {
-            max-width: 1200px;
-            margin: 20px auto;
-            background: #fff;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: #FFFFFF;
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            border-radius: 10px;
-            overflow: hidden;
+        ul {
+            list-style: none;
+            padding: 0;
         }
 
-        table th, table td {
+        li {
+            background: #FAFAFA;
+            margin-bottom: 1rem;
             padding: 1rem;
-            text-align: left;
-            border: 1px solid #ddd;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
-        table th {
-            background-color: #007BFF;
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
             color: white;
-            text-transform: uppercase;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
             font-size: 1rem;
-            color: #007BFF;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        a:hover {
-            color: #0056b3;
+        button:hover {
+            background-color: #388E3C;
         }
 
         .navbar {
-            background-color: #007BFF;
+            background-color: #4CAF50;
             color: white;
-            padding: 15px 30px;
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar .logo a {
+        .navbar a {
             color: white;
             text-decoration: none;
-            font-size: 1.5rem;
+            margin-left: 1rem;
             font-weight: bold;
         }
 
-        .navbar .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 15px;
-            font-weight: bold;
-        }
-
-        .navbar .nav-links a:hover {
+        .navbar a:hover {
             color: #FFC107;
         }
 
@@ -114,60 +98,50 @@
         }
 
         .footer a {
-            color: #FFC107;
+            color: #4CAF50;
             text-decoration: none;
         }
 
         .footer a:hover {
-            color: #ffdb4d;
+            color: #FFC107;
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <div class="navbar">
-        <div class="logo">
-            <a href="#">Grading System</a>
-        </div>
+        <div class="logo"><a href="#">Grading System</a></div>
         <div class="nav-links">
-            <a href="{{ url_for('view_students') }}">Back to Students List</a>
+            <a href="{{ url_for('view_students') }}">Back</a>
             <a href="{{ url_for('logout') }}">Logout</a>
-            <a href="#">Contact</a>
         </div>
     </div>
 
-    <!-- Content -->
     <div class="content">
-        <h1>Exam Answers for {{ student.username }} - {{ exam_paper.title }}</h1>
+        <h1>Exams Submitted by {{ student.username }}</h1>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Question</th>
-                    <th>Student Answer</th>
-                    <th>Ideal Answer</th>
-                    <th>Grade (%)</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for question, student_answer, ideal_answer, grade, score in graded_answers %}
-
-                <tr>
-                    <td>{{ question.text }}</td>
-                    <td>{{ student_answer if student_answer else "No answer submitted." }}</td>
-                    <td>{{ ideal_answer }}</td>
-                    <td>{{ grade }}%</td>
-                    <td>{{ score }} / {{ question.max_marks }}</td>
-                </tr>
+        {% if submitted_papers %}
+            <ul>
+                {% for paper in submitted_papers %}
+                <li>
+                    <div>
+                        <strong>{{ paper.title }}</strong>
+                        <div class="button-container">
+                            <a href="{{ url_for('view_exam_answers_teachers', paper_id=paper.id, student_id=student.id) }}">
+                                <button>View Answers</button>
+                            </a>
+                            <a href="{{ url_for('download_student_answer_pdf', paper_id=paper.id, student_id=student.id) }}">
+                                <button>Download PDF</button>
+                            </a>
+                        </div>
+                    </div>
+                </li>
                 {% endfor %}
-            </tbody>
-        </table>
-
-        <a href="{{ url_for('view_student_exams', student_id=student.id) }}">← Back to Exams</a>
+            </ul>
+        {% else %}
+            <p>No exams submitted yet.</p>
+        {% endif %}
     </div>
 
-    <!-- Footer -->
     <div class="footer">
         <p>&copy; 2024 Subjective Answer Grading System. All Rights Reserved. <a href="#">Privacy Policy</a></p>
     </div>
